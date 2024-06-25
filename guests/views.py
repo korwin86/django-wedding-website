@@ -48,6 +48,7 @@ def dashboard(request):
     category_breakdown = attending_guests.values('party__category').annotate(count=Count('*'))
     return render(request, 'guests/dashboard.html', context={
         'couple_name': settings.BRIDE_AND_GROOM,
+        'website_url': settings.WEDDING_WEBSITE_URL,        
         'guests': Guest.objects.filter(is_attending=True).count(),
         'possible_guests': Guest.objects.filter(party__is_invited=True).exclude(is_attending=False).count(),
         'not_coming_guests': Guest.objects.filter(is_attending=False).count(),
@@ -60,6 +61,8 @@ def dashboard(request):
         'total_invites': Party.objects.filter(is_invited=True).count(),
         'meal_breakdown': meal_breakdown,
         'category_breakdown': category_breakdown,
+        'guestlist': Guest.objects.filter(is_attending=True),
+        'notcoming': Guest.objects.filter(is_attending=False),
     })
 
 
@@ -85,6 +88,8 @@ def invitation(request, invite_id):
     return render(request, template_name='guests/invitation.html', context={
         'party': party,
         'meals': MEALS,
+        'couple_name' : settings.BRIDE_AND_GROOM,
+        'website_url': settings.WEDDING_WEBSITE_URL,        
     })
 
 
@@ -114,6 +119,8 @@ def rsvp_confirm(request, invite_id=None):
     return render(request, template_name='guests/rsvp_confirmation.html', context={
         'party': party,
         'support_email': settings.DEFAULT_WEDDING_REPLY_EMAIL,
+        'couple_name' : settings.BRIDE_AND_GROOM,
+        'website_url': settings.WEDDING_WEBSITE_URL,                
     })
 
 
